@@ -3,5 +3,6 @@
 
 /* pętla główna aplikacji: zmiany stanów itd */
 void mainLoop();
+void jobFactory();
 
 #endif
