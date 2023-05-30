@@ -13,8 +13,8 @@
 - krasnal ten dzieli się na 2 wątki - 1. odpowiada ACK na wszystkie REQ dot. innych zleceń; 2. idzie dalej
 - krasnale odbierają REQ dot. portali od swoich braci:
     - jeśli krasnal nie ubiega się o portal to wysyła ACK
-    - jeśli krasnal ubiega się o to zlecenie, ale ma niższy priorytet to wysyła ACK
-    - jeśli krasnal ubiega się o to zlecenie i ma wyższy priorytet to dodaje proces, który wysłał REQ do listy (wyśle mu ACK po wyjściu z sekcji krytycznej)
+    - jeśli krasnal ubiega się o portal, ale ma niższy priorytet to wysyła ACK
+    - jeśli krasnal ubiega się o portal i ma wyższy priorytet to dodaje proces, który wysłał REQ do listy (wyśle mu ACK po wyjściu z sekcji krytycznej)
 - krasnal, który otrzymał ACK od chociaż (ilość_krasnoludów-1-X) braci przechodzi dalej (X to ilość portali)
 - krasnal, który ma zlecenie i portal wykonuje zadanie
 - krasnal, który wykonał zlecenie zwalnia portal (wychodzi z sekcji krytycznej) i wysyła ACK do krasnali, które nagromadziły się na jego liście
@@ -29,3 +29,4 @@
 - na poczatek parzyste ranki - krasnale, nieparzyste - skanseny
 - zliczanie ACK: upper(size/2) - 1
 - delay przy generowaniu zlecen
+

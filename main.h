@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <pthread.h>
-
+#include <math.h>
 #include "util.h"
 /* boolean */
 #define TRUE 1
@@ -21,6 +21,8 @@
 extern int rank;
 extern int size;
 extern int ackCount;
+extern int ackPortalCount;
+extern int job_id;
 extern pthread_t threadKom;
 
 extern long lamport_clock;

@@ -13,6 +13,7 @@
  */
 int rank, size;
 int ackCount = 0;
+int ackPortalCount = 0;
 /* 
  * Każdy proces ma dwa wątki - główny i komunikacyjny
  * w plikach, odpowiednio, watek_glowny.c oraz (siurpryza) watek_komunikacyjny.c
@@ -71,12 +72,12 @@ int main(int argc, char **argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     
+    
     if (rank % 2 == 0){ // obsluga krasnali
         pthread_create( &threadKom, NULL, startKomWatek , 0);
         mainLoop();
     }
     else{ // obsluga skansenow
-        //mainLoop();
         jobFactory();
     }
 

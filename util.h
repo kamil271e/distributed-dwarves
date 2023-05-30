@@ -6,11 +6,11 @@
 typedef struct {
     int ts;       /* timestamp (zegar lamporta */
     int src;  
-
     int data;     /* przykładowe pole z danymi; można zmienić nazwę na bardziej pasującą */
 } packet_t;
 /* packet_t ma trzy pola, więc NITEMS=3. Wykorzystane w inicjuj_typ_pakietu */
 #define NITEMS 3
+#define PORTAL_NUM 5
 
 /* Typy wiadomości */
 /* TYPY PAKIETÓW */
@@ -19,6 +19,10 @@ typedef struct {
 #define RELEASE 3
 #define APP_PKT 4
 #define FINISH  5
+#define JOB 6
+#define PORTAL_ACK 7
+#define PORTAL_REQUEST 8
+#define PORTAL_RELEASE 9
 
 extern MPI_Datatype MPI_PAKIET_T;
 void inicjuj_typ_pakietu();
