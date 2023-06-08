@@ -34,7 +34,7 @@ void mainLoop()
 
 			println("Wychodzę z sekcji krytyczneh")
 			debug("Zmieniam stan na wysyłanie");
-			packet_t *pkt = malloc(sizeof(packet_t));
+			// packet_t *pkt = malloc(sizeof(packet_t));
 			pkt->data = perc;
 			job_id = -1;
 			for (int i=0;i<=size-1;i++){

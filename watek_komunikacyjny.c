@@ -43,7 +43,7 @@ void *startKomWatek(void *ptr)
                 } else if (pakiet.ts < lamport_clock){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
                 } else {
-                    // llist.push(pakiet.src) / llist.push(status.MPI_SOURCE); // TODO
+                    enqueue(ackQueue, pakiet.src); // status.MPI_SOURCE
                 }
                 break;
             case PORTAL_ACK:

@@ -11,14 +11,14 @@
  * ale zob util.c oraz util.h - zmienną state_t state i funkcję changeState
  *
  */
-int rank, size;
+int rank, size, job_id;
 int ackCount = 0;
 int ackPortalCount = 0;
+struct Queue* ackQueue = NULL;
+
 /* 
  * Każdy proces ma dwa wątki - główny i komunikacyjny
  * w plikach, odpowiednio, watek_glowny.c oraz (siurpryza) watek_komunikacyjny.c
- *
- *
  */
 
 pthread_t threadKom;
@@ -62,6 +62,7 @@ void check_thread_support(int provided)
 
 int main(int argc, char **argv)
 {
+    ackQueue = createQueue();
     MPI_Status status;
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);

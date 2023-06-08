@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <math.h>
 #include "util.h"
+#include "queue.h"
+
 /* boolean */
 #define TRUE 1
 #define FALSE 0
@@ -24,11 +26,9 @@ extern int ackCount;
 extern int ackPortalCount;
 extern int job_id;
 extern pthread_t threadKom;
-
 extern long lamport_clock;
 extern pthread_mutex_t clockMut;
-
-
+extern struct Queue* ackQueue; 
 
 /* macro debug - działa jak printf, kiedy zdefiniowano
    DEBUG, kiedy DEBUG niezdefiniowane działa jak instrukcja pusta 
@@ -49,13 +49,13 @@ extern pthread_mutex_t clockMut;
                                             
 */
 #ifdef DEBUG
-#define debug(FORMAT,...) printf("%c[%d;%dm [%d]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
+#define debug(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
 #else
 #define debug(...) ;
 #endif
 
 // makro println - to samo co debug, ale wyświetla się zawsze
-#define println(FORMAT,...) printf("%c[%d;%dm [%d]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
+#define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
 
 
 #endif
