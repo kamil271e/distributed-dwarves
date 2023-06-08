@@ -2,7 +2,6 @@
 #define WATEK_GLOWNY_H
 
 /* pętla główna aplikacji: zmiany stanów itd */
-void mainLoop();
-void jobFactory();
+void main_loop();
 
 #endif

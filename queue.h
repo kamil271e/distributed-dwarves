@@ -1,5 +1,5 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef QUEUEH
+#define QUEUEH
 
 struct QueueNode {
     int data;

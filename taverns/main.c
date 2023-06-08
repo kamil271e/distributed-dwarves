@@ -1,7 +1,8 @@
-/* w main.h także makra println oraz debug -  z kolorkami! */
 #include "main.h"
-#include "watek_glowny.h"
-#include "watek_komunikacyjny.h"
+#include "main_thread.h"
+#include "com_thread.h"
+#include "../queue.h"
+#include "../util.h"
 
 /*
  * W main.h extern int rank (zapowiedź) w main.c int rank (definicja)
@@ -11,27 +12,21 @@
  * ale zob util.c oraz util.h - zmienną state_t state i funkcję changeState
  *
  */
-int rank, size, job_id;
-int ackCount = 0;
-int ackPortalCount = 0;
-struct Queue* ackQueue = NULL;
+int job_id; // size - ilosc procesow - krasnali
+int ack_count = 0;
+int ack_portal_count = 0;
+struct Queue* ack_queue = NULL;
 
-/* 
- * Każdy proces ma dwa wątki - główny i komunikacyjny
- * w plikach, odpowiednio, watek_glowny.c oraz (siurpryza) watek_komunikacyjny.c
- */
+pthread_t com_thread;
+pthread_mutex_t clock_mut = PTHREAD_MUTEX_INITIALIZER;
 
-pthread_t threadKom;
-long lamport_clock = 0;
-pthread_mutex_t clockMut = PTHREAD_MUTEX_INITIALIZER;
-
-void finalizuj()
+void finalize()
 {
-    pthread_mutex_destroy( &stateMut);
+    pthread_mutex_destroy( &state_mut);
     /* Czekamy, aż wątek potomny się zakończy */
     println("czekam na wątek \"komunikacyjny\"\n" );
-    pthread_join(threadKom,NULL);
-    MPI_Type_free(&MPI_PAKIET_T);
+    pthread_join(com_thread,NULL);
+    MPI_Type_free(&MPI_PACKET_T);
     MPI_Finalize();
 }
 
@@ -59,30 +54,22 @@ void check_thread_support(int provided)
     }
 }
 
-
 int main(int argc, char **argv)
 {
-    ackQueue = createQueue();
-    MPI_Status status;
+    ack_queue = createQueue();
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
     check_thread_support(provided);
     srand(rank);
     /* zob. util.c oraz util.h */
-    inicjuj_typ_pakietu(); // tworzy typ pakietu
+    init_packet_type(); // tworzy typ pakietu
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     
-    
-    if (rank % 2 == 0){ // obsluga krasnali
-        pthread_create( &threadKom, NULL, startKomWatek , 0);
-        mainLoop();
-    }
-    else{ // obsluga skansenow
-        jobFactory();
-    }
+    pthread_create( &com_thread, NULL, start_com_thread , 0);
+    main_loop();
+    finalize();
 
-    finalizuj();
     return 0;
 }
 
