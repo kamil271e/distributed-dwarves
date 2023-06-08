@@ -7,7 +7,7 @@ void *start_com_thread(void *ptr)
     packet_t packet;
 
     while (state != InFinish ) {
-	    debug("czekam na recv");
+	    // debug("Czekam na recv");
         MPI_Recv( &packet, 1, MPI_PACKET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         pthread_mutex_lock( &clock_mut );
         lamport_clock = (lamport_clock > packet.ts ? lamport_clock : packet.ts) + 1;

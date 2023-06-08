@@ -15,6 +15,10 @@
 // makro println - to samo co debug, ale wyświetla się zawsze
 #define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
 
+#ifndef NUM_TAVERNS
+    #define NUM_TAVERNS 1
+#endif
+
 #define TRUE 1
 #define FALSE 0
 #define SEC_IN_STATE 1

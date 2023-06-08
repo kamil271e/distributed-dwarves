@@ -12,7 +12,9 @@ void main_loop()
 				packet_t *pkt = malloc(sizeof(packet_t));
 				pkt->data = lamport_clock; // ???
 				for (int i = 0; i < size; i++){
-					sendPacket(pkt, i, JOB); 
+					if (i != rank){
+						sendPacket(pkt, i, JOB); 
+					}
 				}
 			default: 
 				break;

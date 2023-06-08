@@ -32,7 +32,7 @@ void finalize()
 
 void check_thread_support(int provided)
 {
-    printf("THREAD SUPPORT: chcemy %d. Co otrzymamy?\n", provided);
+    // printf("THREAD SUPPORT: chcemy %d. Co otrzymamy?\n", provided);
     switch (provided) {
         case MPI_THREAD_SINGLE: 
             printf("Brak wsparcia dla wątków, kończę\n");
@@ -48,7 +48,7 @@ void check_thread_support(int provided)
             /* Potrzebne zamki wokół wywołań biblioteki MPI */
             printf("tylko jeden watek naraz może wykonać wołania do biblioteki MPI\n");
 	    break;
-        case MPI_THREAD_MULTIPLE: printf("Pełne wsparcie dla wątków\n"); /* tego chcemy. Wszystkie inne powodują problemy */
+        case MPI_THREAD_MULTIPLE: // printf("Pełne wsparcie dla wątków\n"); /* tego chcemy. Wszystkie inne powodują problemy */
 	    break;
         default: printf("Nikt nic nie wie\n");
     }
@@ -65,7 +65,8 @@ int main(int argc, char **argv)
     init_packet_type(); // tworzy typ pakietu
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    
+    changeState(GenJob);
+
     pthread_create( &com_thread, NULL, start_com_thread , 0);
     main_loop();
     finalize();

@@ -13,33 +13,38 @@ void main_loop()
 				println("Czekam na wejście do sekcji krytycznej")
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				// bo aktywne czekanie jest BUE
-				if ( ack_count == size - 1) 
-					changeState(InSection);
+				if (!sent_req){
+					for (int i = 0; i <= size-1; i++){ // nie wysylaj jak juz to zrobiles
+						if (i != rank){
+							sendPacket(0, i, REQUEST);
+						}
+					} sent_req=1;
+				} // TODO dodac nowy state zamiast uzywania sent_req
 				break;
 			case InSection:
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				println("Jestem w sekcji krytycznej")
-				packet_t *pkt = malloc(sizeof(packet_t));
-				for (int i=0;i<=size-1;i++){
-					if (i!=rank){
-						sendPacket( pkt, (rank+1)%size, PORTAL_REQUEST);
+				for (int i = 0; i <= size-1; i++){
+					if (i != rank){
+						sendPacket(0, i, PORTAL_REQUEST);
 					}
 				}
 				while(ack_portal_count < size-1-PORTAL_NUM){} // TODO aktywne czekanie
 
+				println("Robię fuchę :)");
+
 				sleep(5); // robimy fuche
 
-				println("Wychodzę z sekcji krytyczneh")
+				println("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");
 
 				job_id = -1;
 				for (int i = 0; i <= size-1; i++){
 					if (i != rank){
-						sendPacket( pkt, (rank+1)%size, RELEASE);
+						sendPacket(0, i, RELEASE);
 					}
 				}
 				changeState( InRun );
-				free(pkt);
 				break;
 			default: 
 				break;

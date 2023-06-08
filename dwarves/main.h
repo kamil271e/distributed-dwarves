@@ -21,5 +21,6 @@ extern pthread_t com_thread;
 extern long lamport_clock;
 extern pthread_mutex_t clock_mut;
 extern struct Queue* ack_queue; 
+extern int sent_req;
 
 #endif

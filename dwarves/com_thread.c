@@ -8,7 +8,7 @@ void *start_com_thread(void *ptr)
     packet_t packet;
 
     while (state != InFinish ) {
-	    debug("czekam na recv");
+	    // debug("Czekam na recv");
         MPI_Recv( &packet, 1, MPI_PACKET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         pthread_mutex_lock( &clock_mut );
         lamport_clock = (lamport_clock > packet.ts ? lamport_clock : packet.ts) + 1;
@@ -28,7 +28,11 @@ void *start_com_thread(void *ptr)
                 break;
             case ACK: 
                 ack_count++;
-                debug("Dostałem ACK od %d, mam już %d", status.MPI_SOURCE, ack_count); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
+                debug("Dostałem ACK od %d, mam już %d a muszę mieć %d", status.MPI_SOURCE, ack_count, NUM_TAVERNS); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
+                if ( ack_count == size - 1 - NUM_TAVERNS){ // TODO size - 1 - liczba_skansenow
+					changeState(InSection);
+					sent_req=0;
+				} 
                 break;
             case JOB:
                 debug("Skansen prosi mnie o zlecenie");

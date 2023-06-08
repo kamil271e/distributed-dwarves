@@ -15,6 +15,7 @@
 int job_id;
 int ack_count = 0;
 int ack_portal_count = 0;
+int sent_req = 0;
 struct Queue* ack_queue = NULL;
 
 pthread_t com_thread;
@@ -32,7 +33,7 @@ void finalize()
 
 void check_thread_support(int provided)
 {
-    printf("THREAD SUPPORT: chcemy %d. Co otrzymamy?\n", provided);
+    // printf("THREAD SUPPORT: chcemy %d. Co otrzymamy?\n", provided);
     switch (provided) {
         case MPI_THREAD_SINGLE: 
             printf("Brak wsparcia dla wątków, kończę\n");
@@ -48,7 +49,7 @@ void check_thread_support(int provided)
             /* Potrzebne zamki wokół wywołań biblioteki MPI */
             printf("tylko jeden watek naraz może wykonać wołania do biblioteki MPI\n");
 	    break;
-        case MPI_THREAD_MULTIPLE: printf("Pełne wsparcie dla wątków\n"); /* tego chcemy. Wszystkie inne powodują problemy */
+        case MPI_THREAD_MULTIPLE: // printf("Pełne wsparcie dla wątków\n"); /* tego chcemy. Wszystkie inne powodują problemy */
 	    break;
         default: printf("Nikt nic nie wie\n");
     }
