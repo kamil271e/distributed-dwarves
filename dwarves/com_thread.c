@@ -38,7 +38,7 @@ void *start_com_thread(void *ptr)
             case ACK: 
                 ack_count++;
                 debug("Dostałem ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_count, NUM_DWARVES-1); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
-                if ( ack_count == NUM_DWARVES - 1){ 
+                if ( ack_count >= NUM_DWARVES - 1 - 1){ 
 					changeState(InSection);
 				} 
                 break;
@@ -55,7 +55,7 @@ void *start_com_thread(void *ptr)
             case PORTAL_ACK:
                 ack_portal_count++;
                 debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
-                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS - 1){
                     changeState(DoingJob);
                 }
                 break;

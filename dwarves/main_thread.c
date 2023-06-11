@@ -17,9 +17,7 @@ void main_loop()
 				packet_t* pkt = malloc(sizeof(packet_t));
 				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){ 
-					if (i != rank){
-						sendPacket(pkt, i, REQUEST);
-					}
+					sendPacket(pkt, i, REQUEST);
 				} changeState(WaitForACK);
 				free(pkt);
 				break;
@@ -30,9 +28,7 @@ void main_loop()
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				println("Jestem w sekcji krytycznej")
 				for (int i = 0; i <= size-1; i++){
-					if (i != rank){
-						sendPacket(0, i, PORTAL_REQUEST);
-					}
+					sendPacket(0, i, PORTAL_REQUEST);
 				} changeState(WaitForPortal);
 				break;
 			case WaitForPortal:
