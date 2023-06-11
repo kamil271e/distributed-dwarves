@@ -7,16 +7,24 @@
 #include <stddef.h>
 
 #ifdef DEBUG
-#define debug(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
+#define debug(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, (long)rank, ##__VA_ARGS__, 27,0,37);
 #else
 #define debug(...) ;
 #endif
 
 // makro println - to samo co debug, ale wyświetla się zawsze
-#define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
+#define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, (long)rank, ##__VA_ARGS__, 27,0,37);
 
 #ifndef NUM_TAVERNS
     #define NUM_TAVERNS 1
+#endif
+
+#ifndef NUM_PORTALS
+    #define NUM_PORTALS 1
+#endif
+
+#ifndef NUM_DWARVES
+    #define NUM_DWARVES 1
 #endif
 
 #define TRUE 1
@@ -48,8 +56,11 @@ typedef struct {
 typedef enum {
     InRun, // for dwarves
     InMonitor,
-    InWant,
+    WantJob, // chec wejscia do sekcji, przed wyslaniem REQ do innych krasnali
+    WaitForREQ, // chec wejscia do sekcji po wyslaniu REQ do wszystkich 
     InSection,
+    WaitForPortal,
+    DoingJob,
     InFinish,
     GenJob // for taverns
 } state_t;

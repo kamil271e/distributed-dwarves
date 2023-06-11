@@ -8,18 +8,20 @@ void main_loop()
     while (state != InFinish) {
 		switch (state) {
 			case InRun: 
+				// wait
 				break;
-			case InWant:
-				println("Czekam na wejście do sekcji krytycznej")
+			case WantJob:
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				// bo aktywne czekanie jest BUE
-				if (!sent_req){
-					for (int i = 0; i <= size-1; i++){ // nie wysylaj jak juz to zrobiles
-						if (i != rank){
-							sendPacket(0, i, REQUEST);
-						}
-					} sent_req=1;
-				} // TODO dodac nowy state zamiast uzywania sent_req
+				println("Czekam na wejście do sekcji krytycznej")
+				for (int i = 0; i <= size-1; i++){ 
+					if (i != rank){
+						sendPacket(0, i, REQUEST);
+					}
+				} changeState(WaitForREQ);
+				break;
+			case WaitForREQ:
+				// wait
 				break;
 			case InSection:
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
@@ -28,22 +30,28 @@ void main_loop()
 					if (i != rank){
 						sendPacket(0, i, PORTAL_REQUEST);
 					}
-				}
-				while(ack_portal_count < size-1-PORTAL_NUM){} // TODO aktywne czekanie
+				} changeState(WaitForPortal);
+				break;
+			case WaitForPortal:
+				// wait
+				break;
+			case DoingJob:
+				println("Robię fuchę !!!!!!!!");
 
-				println("Robię fuchę :)");
-
-				sleep(5); // robimy fuche
+				sleep(5); 
 
 				println("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");
 
-				job_id = -1;
-				for (int i = 0; i <= size-1; i++){
-					if (i != rank){
-						sendPacket(0, i, RELEASE);
-					}
+				job_id = -1; // wysylanie ACK do krasnali z listy
+				struct QueueNode* current = ack_queue->front;
+				while (current != NULL){
+					int dest = current->data;
+					sendPacket(0, dest, PORTAL_ACK);
+					current = current->next;
 				}
+				ack_count=0;
+				ack_portal_count=0;
 				changeState( InRun );
 				break;
 			default: 

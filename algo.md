@@ -23,10 +23,5 @@
 -------------------------------------------------------
 
 
-1. Rozroznianie skansenow oraz krasnali
-- osobne programy - moze jednak nie xd - losowanie czym jest dany proces
-
-- na poczatek parzyste ranki - krasnale, nieparzyste - skanseny
-- zliczanie ACK: upper(size/2) - 1
-- delay przy generowaniu zlecen
+1. osobne programy dla skansenow i krasnali, liczba podawana podczas kompilacji - makro
 

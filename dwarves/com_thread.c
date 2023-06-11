@@ -15,12 +15,17 @@ void *start_com_thread(void *ptr)
         pthread_mutex_unlock( &clock_mut );
         
         switch ( status.MPI_TAG ) {
+            case JOB:
+                debug("Skansen wysłał mi zlecenie");
+                job_id = packet.data; 
+                changeState(WantJob);
+                break;
             case REQUEST: 
                 debug("Ktoś ubiega się o zlecenie!");
                 if (packet.data != job_id){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                 }
-                else if (state == InWant && packet.ts < lamport_clock){
+                else if ((state == WantJob || state == WaitForREQ) && packet.ts < lamport_clock){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                     changeState(InRun);
                     job_id = -1;
@@ -28,16 +33,10 @@ void *start_com_thread(void *ptr)
                 break;
             case ACK: 
                 ack_count++;
-                debug("Dostałem ACK od %d, mam już %d a muszę mieć %d", status.MPI_SOURCE, ack_count, NUM_TAVERNS); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
-                if ( ack_count == size - 1 - NUM_TAVERNS){ // TODO size - 1 - liczba_skansenow
+                debug("Dostałem ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_count, NUM_DWARVES-1); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
+                if ( ack_count == NUM_DWARVES - 1){ 
 					changeState(InSection);
-					sent_req=0;
 				} 
-                break;
-            case JOB:
-                debug("Skansen prosi mnie o zlecenie");
-                job_id = packet.data; 
-                changeState(InWant);
                 break;
             case PORTAL_REQUEST:
                 debug("Dostałem portal request");
@@ -51,7 +50,10 @@ void *start_com_thread(void *ptr)
                 break;
             case PORTAL_ACK:
                 ack_portal_count++;
-                debug("Dostałem Portal_ACK od %d, mam już %d", status.MPI_SOURCE, ack_portal_count);
+                debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
+                if (ack_portal_count == NUM_DWARVES - 1 - NUM_PORTALS){
+                    changeState(DoingJob);
+                }
                 break;
             default:
                 break;
