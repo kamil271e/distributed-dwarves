@@ -26,4 +26,5 @@
 osobne programy dla skansenow i krasnali, liczba podawana podczas kompilacji - makro <br>
 TODO: określanie kolejności kolejnych zleceń<br>
 TODO: sa sytuacje ze wiecej niz jeden krasnal wykonuje dana fuchę<br>
-TODO: dodac mutexy/semafory
+TODO: dodac mutexy (dostepy do sekcji krytycznych)
+TODO: dodac semafory do synchronizacji pomiędzy wątkami
