@@ -45,24 +45,23 @@
 #define JOB 6
 #define PORTAL_ACK 7
 #define PORTAL_REQUEST 8
-#define PORTAL_RELEASE 9
 
 typedef struct {
     int ts;      
     int src;  
-    int data; 
+    int job_id; 
 } packet_t;
 
 typedef enum {
-    InRun, // for dwarves
+    InRun, // dla krasnali
     InMonitor,
-    WantJob, // chec wejscia do sekcji, przed wyslaniem REQ do innych krasnali
+    WantJob, // chec wejscia do sekcji, przed wyslaniem REQ do innych krasnali (ma juz przypisana fuche o ktr bedzie sie ubiegal)
     WaitForREQ, // chec wejscia do sekcji po wyslaniu REQ do wszystkich 
     InSection,
     WaitForPortal,
     DoingJob,
     InFinish,
-    GenJob // for taverns
+    GenJob // dla skansenów
 } state_t;
 
 extern MPI_Datatype MPI_PACKET_T;

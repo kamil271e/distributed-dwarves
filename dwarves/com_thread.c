@@ -16,19 +16,22 @@ void *start_com_thread(void *ptr)
         
         switch ( status.MPI_TAG ) {
             case JOB:
-                debug("Skansen wysłał mi zlecenie");
-                job_id = packet.data; 
-                changeState(WantJob);
+                if (state == InRun){
+                    debug("Skansen wysłał mi zlecenie");
+                    job_id = packet.job_id; 
+                    changeState(WantJob);
+                }
                 break;
             case REQUEST: 
                 debug("Ktoś ubiega się o zlecenie!");
-                if (packet.data != job_id){
+                if (packet.job_id != job_id){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                 }
                 else if ((state == WantJob || state == WaitForREQ) && packet.ts < lamport_clock){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                     changeState(InRun);
                     job_id = -1;
+                    ack_count = 0;
                 }
                 break;
             case ACK: 
@@ -51,7 +54,7 @@ void *start_com_thread(void *ptr)
             case PORTAL_ACK:
                 ack_portal_count++;
                 debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
-                if (ack_portal_count == NUM_DWARVES - 1 - NUM_PORTALS){
+                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
                     changeState(DoingJob);
                 }
                 break;

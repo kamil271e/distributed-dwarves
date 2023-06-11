@@ -41,7 +41,7 @@ void init_packet_type()
     MPI_Aint offsets[NITEMS]; 
     offsets[0] = offsetof(packet_t, ts);
     offsets[1] = offsetof(packet_t, src);
-    offsets[2] = offsetof(packet_t, data);
+    offsets[2] = offsetof(packet_t, job_id);
 
     MPI_Type_create_struct(NITEMS, blocklengths, offsets, types, &MPI_PACKET_T);
 

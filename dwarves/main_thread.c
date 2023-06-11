@@ -14,11 +14,14 @@ void main_loop()
 				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				// bo aktywne czekanie jest BUE
 				println("Czekam na wejście do sekcji krytycznej")
+				packet_t* pkt = malloc(sizeof(packet_t));
+				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){ 
 					if (i != rank){
 						sendPacket(0, i, REQUEST);
 					}
 				} changeState(WaitForREQ);
+				free(pkt);
 				break;
 			case WaitForREQ:
 				// wait
@@ -44,11 +47,9 @@ void main_loop()
 				debug("Zmieniam stan na wysyłanie");
 
 				job_id = -1; // wysylanie ACK do krasnali z listy
-				struct QueueNode* current = ack_queue->front;
-				while (current != NULL){
-					int dest = current->data;
+				while (!isEmpty(ack_queue)){
+					int dest = dequeue(ack_queue);
 					sendPacket(0, dest, PORTAL_ACK);
-					current = current->next;
 				}
 				ack_count=0;
 				ack_portal_count=0;
