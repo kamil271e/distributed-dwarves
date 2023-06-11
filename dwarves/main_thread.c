@@ -18,12 +18,12 @@ void main_loop()
 				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){ 
 					if (i != rank){
-						sendPacket(0, i, REQUEST);
+						sendPacket(pkt, i, REQUEST);
 					}
-				} changeState(WaitForREQ);
+				} changeState(WaitForACK);
 				free(pkt);
 				break;
-			case WaitForREQ:
+			case WaitForACK:
 				// wait
 				break;
 			case InSection:

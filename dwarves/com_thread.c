@@ -27,9 +27,10 @@ void *start_com_thread(void *ptr)
                 if (packet.job_id != job_id){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                 }
-                else if ((state == WantJob || state == WaitForREQ) && packet.ts < lamport_clock){
+                else if ((state == WantJob || state == WaitForACK) && packet.ts < lamport_clock){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                     changeState(InRun);
+                    // printf("change job id from %d to -1\n", job_id);
                     job_id = -1;
                     ack_count = 0;
                 }

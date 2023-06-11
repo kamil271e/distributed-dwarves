@@ -56,7 +56,7 @@ typedef enum {
     InRun, // dla krasnali
     InMonitor,
     WantJob, // chec wejscia do sekcji, przed wyslaniem REQ do innych krasnali (ma juz przypisana fuche o ktr bedzie sie ubiegal)
-    WaitForREQ, // chec wejscia do sekcji po wyslaniu REQ do wszystkich 
+    WaitForACK, // chec wejscia do sekcji po wyslaniu REQ do wszystkich 
     InSection,
     WaitForPortal,
     DoingJob,

@@ -23,6 +23,7 @@
 -------------------------------------------------------
 
 
-osobne programy dla skansenow i krasnali, liczba podawana podczas kompilacji - makro
-TODO: określanie kolejności kolejnych zleceń
-TODO: sa sytuacje ze wiecej niz jeden krasnal wykonuje dana fuchę
+osobne programy dla skansenow i krasnali, liczba podawana podczas kompilacji - makro <br>
+TODO: określanie kolejności kolejnych zleceń<br>
+TODO: sa sytuacje ze wiecej niz jeden krasnal wykonuje dana fuchę<br>
+TODO: dodac mutexy/semafory
