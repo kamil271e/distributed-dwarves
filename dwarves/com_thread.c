@@ -13,21 +13,27 @@ void *start_com_thread(void *ptr)
         pthread_mutex_lock( &clock_mut );
         lamport_clock = (lamport_clock > packet.ts ? lamport_clock : packet.ts) + 1;
         pthread_mutex_unlock( &clock_mut );
+
+        int src_priority = packet.priority;
+        int priority = rec_priority < src_priority ? 1 : 0;    // mamy priorytet, jeśli mamy mniejszą wartość
         
         switch ( status.MPI_TAG ) {
             case JOB:
                 if (state == InRun){
-                    debug("Skansen wysłał mi zlecenie");
+                    debug("Skansen wysłał mi zlecenie %d", packet.job_id);
                     job_id = packet.job_id; 
+                    rec_priority = lamport_clock*1000 + rank;
                     changeState(WantJob);
                 }
                 break;
             case REQUEST: 
-                debug("Ktoś ubiega się o zlecenie!");
+                debug("Priorytety: rec %ld, src %d", rec_priority, src_priority);
+                debug("O zlecenie ubiega się %d", packet.src);
                 if (packet.job_id != job_id){
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                 }
-                else if ((state == WantJob || state == WaitForACK) && packet.ts < lamport_clock){
+                else if ((state == WantJob || state == WaitForACK) && !priority){
+                    debug("Rezygnuję z fuchy, %d ma wyższy priorytet", packet.src);
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                     changeState(InRun);
                     // printf("change job id from %d to -1\n", job_id);
@@ -35,12 +41,14 @@ void *start_com_thread(void *ptr)
                     ack_count = 0;
                 }
                 break;
-            case ACK: 
-                ack_count++;
-                debug("Dostałem ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_count, NUM_DWARVES-1); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
-                if ( ack_count >= NUM_DWARVES - 1 - 1){ 
-					changeState(InSection);
-				} 
+            case ACK:
+                if (packet.job_id == job_id){
+                    ack_count++;
+                    debug("Dostałem ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_count, NUM_DWARVES-1); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
+                    if ( ack_count >= NUM_DWARVES - 1 - 1){ 
+                        changeState(InSection);
+                    } 
+                }
                 break;
             case PORTAL_REQUEST:
                 debug("Dostałem portal request");

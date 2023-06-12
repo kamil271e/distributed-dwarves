@@ -32,8 +32,8 @@
 #define SEC_IN_STATE 1
 #define STATE_CHANGE_PROB 10
 
-/* packet_t ma trzy pola, więc NITEMS=3. Wykorzystane w inicjuj_typ_pakietu */
-#define NITEMS 3
+/* packet_t ma trzy pola, więc NITEMS=4. Wykorzystane w inicjuj_typ_pakietu */
+#define NITEMS 4
 #define PORTAL_NUM 5
 
 /* TYPY PAKIETÓW */
@@ -49,7 +49,8 @@
 typedef struct {
     int ts;      
     int src;  
-    int job_id; 
+    int job_id;
+    int priority;
 } packet_t;
 
 typedef enum {

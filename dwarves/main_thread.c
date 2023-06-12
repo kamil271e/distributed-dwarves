@@ -11,13 +11,15 @@ void main_loop()
 				// wait
 				break;
 			case WantJob:
-				// tutaj zapewne jakiś muteks albo zmienna warunkowa
-				// bo aktywne czekanie jest BUE
 				println("Czekam na wejście do sekcji krytycznej")
 				packet_t* pkt = malloc(sizeof(packet_t));
 				pkt->job_id = job_id;
-				for (int i = 0; i <= size-1; i++){ 
-					sendPacket(pkt, i, REQUEST);
+				pkt->priority = rec_priority;
+
+				for (int i = 0; i < size-1; i++){
+					if (i != rank){
+						sendPacket(pkt, i, REQUEST);
+					}
 				} changeState(WaitForACK);
 				free(pkt);
 				break;
@@ -25,10 +27,11 @@ void main_loop()
 				// wait
 				break;
 			case InSection:
-				// tutaj zapewne jakiś muteks albo zmienna warunkowa
 				println("Jestem w sekcji krytycznej")
 				for (int i = 0; i <= size-1; i++){
-					sendPacket(0, i, PORTAL_REQUEST);
+					if (i != rank){
+						sendPacket(0, i, PORTAL_REQUEST);
+					}
 				} changeState(WaitForPortal);
 				break;
 			case WaitForPortal:

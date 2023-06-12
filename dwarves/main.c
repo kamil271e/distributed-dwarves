@@ -67,10 +67,12 @@ int main(int argc, char **argv)
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     
+    // komunikacja (odbieranie i wysyłanie REQ, ACK...)
     pthread_create( &com_thread, NULL, start_com_thread , 0);
+    // główny wątek (zmiana stanu w którym jest krasnolud na danym etapie)
     main_loop();
-    finalize();
 
+    finalize();
     return 0;
 }
 

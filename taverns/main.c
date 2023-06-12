@@ -67,10 +67,12 @@ int main(int argc, char **argv)
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     changeState(GenJob);
 
+    // komunikacja (przy tawernie nieużywana)
     pthread_create( &com_thread, NULL, start_com_thread , 0);
+    // główna pętla (wysyłanie zleceń)
     main_loop();
-    finalize();
 
+    finalize();
     return 0;
 }
 

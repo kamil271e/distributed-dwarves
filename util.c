@@ -3,6 +3,7 @@
 int rank;
 int size;
 long lamport_clock=0;
+long rec_priority = 0;
 MPI_Datatype MPI_PACKET_T;
 
 /* 
@@ -35,13 +36,14 @@ const char *const tag2string( int tag )
 
 void init_packet_type()
 {
-    int blocklengths[NITEMS] = {1,1,1};
-    MPI_Datatype types[NITEMS] = {MPI_INT, MPI_INT, MPI_INT};
+    int blocklengths[NITEMS] = {1,1,1,1};
+    MPI_Datatype types[NITEMS] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT};
 
     MPI_Aint offsets[NITEMS]; 
     offsets[0] = offsetof(packet_t, ts);
     offsets[1] = offsetof(packet_t, src);
     offsets[2] = offsetof(packet_t, job_id);
+    offsets[3] = offsetof(packet_t, priority);
 
     MPI_Type_create_struct(NITEMS, blocklengths, offsets, types, &MPI_PACKET_T);
 
@@ -52,7 +54,7 @@ void sendPacket(packet_t *pkt, int destination, int tag)
 {
     int freepkt=0;
     if (pkt==0) { pkt = malloc(sizeof(packet_t)); freepkt=1;}
-    
+
     pthread_mutex_lock( &clock_mut );
     pkt->src = rank;
     lamport_clock++;

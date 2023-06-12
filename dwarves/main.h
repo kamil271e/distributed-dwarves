@@ -17,6 +17,7 @@ extern int size;
 extern int ack_count;
 extern int ack_portal_count;
 extern int job_id;  // id zlecenia o ktore bedzie sie ubiegal dany krasnal
+extern long rec_priority; // priorytet ustalany przy dostaniu zlecenia
 extern pthread_t com_thread;
 extern long lamport_clock;
 extern pthread_mutex_t clock_mut;
