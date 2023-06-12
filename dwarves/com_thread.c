@@ -85,9 +85,9 @@ void *start_com_thread(void *ptr)
                 break;
             case PORTAL_REQUEST:
                 debug("Dostałem portal request");
-                if (state != InSection && state != WaitForPortal){
+                if (state != DoingJob && state != WaitForPortal){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
-                } else if (packet.ts < lamport_clock){
+                } else if (!priority){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
                 } else {
                     pthread_mutex_lock(&queue_mutex);
