@@ -7,10 +7,10 @@ void main_loop()
 
     while (state != InFinish) {
 		switch (state) {
-			// TODO stany dla skansanu
 			case GenJob:
+				debug("Generuję fuchę %d", lamport_clock);
 				packet_t *pkt = malloc(sizeof(packet_t));
-				pkt->job_id = lamport_clock; // ???
+				pkt->job_id = lamport_clock;
 				for (int i = 0; i < size; i++){
 					if (i != rank){
 						sendPacket(pkt, i, JOB); 
@@ -20,6 +20,6 @@ void main_loop()
 				break;
 		}
 		sleep(SEC_IN_STATE);
-		sleep(5);
+		sleep(1);
 	}
 }

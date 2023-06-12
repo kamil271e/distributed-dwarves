@@ -3,6 +3,7 @@
 int rank, size;
 int job_id = -1;
 int ack_count, ack_portal_count = 0;
+int dictator = 0;
 long lamport_clock = 0;
 long rec_priority = 0;
 MPI_Datatype MPI_PACKET_T;
@@ -56,8 +57,26 @@ void sendPacket(packet_t *pkt, int destination, int tag)
     int freepkt=0;
     if (pkt==0) { pkt = malloc(sizeof(packet_t)); freepkt=1;}
 
-    pthread_mutex_lock( &clock_mut );
     pkt->src = rank;
+
+    pthread_mutex_lock( &clock_mut );
+    lamport_clock++;
+    pkt->ts = lamport_clock;
+    pthread_mutex_unlock( &clock_mut );
+
+    MPI_Send( pkt, 1, MPI_PACKET_T, destination, tag, MPI_COMM_WORLD);
+    debug("Wysyłam %s do %d", tag2string(tag), destination);
+    if (freepkt) free(pkt);
+}
+
+void sendDictatorPacket(packet_t *pkt, int destination, int tag)
+{
+    int freepkt=0;
+    if (pkt==0) { pkt = malloc(sizeof(packet_t)); freepkt=1;}
+
+    pkt->src = -1;
+    
+    pthread_mutex_lock( &clock_mut );
     lamport_clock++;
     pkt->ts = lamport_clock;
     pthread_mutex_unlock( &clock_mut );

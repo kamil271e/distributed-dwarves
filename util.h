@@ -69,6 +69,7 @@ extern int rank;
 extern int size;
 extern int job_id;
 extern int ack_count;
+extern int dictator;
 extern int ack_portal_count;
 extern long lamport_clock;
 
@@ -83,6 +84,7 @@ extern pthread_mutex_t queue_mutex;
 
 void init_packet_type();
 void sendPacket(packet_t *pkt, int destination, int tag);
+void sendDictatorPacket(packet_t *pkt, int destination, int tag);
 void changeState(state_t);
 void changeJobId(int);
 void changeAckCount(int);

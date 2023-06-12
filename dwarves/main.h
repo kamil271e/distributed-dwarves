@@ -19,5 +19,6 @@ extern long lamport_clock;
 extern long rec_priority; // priorytet ustalany przy dostaniu zlecenia
 extern pthread_t com_thread;
 extern struct Queue* ack_queue; 
+extern struct Queue* req_queue; 
 
 #endif

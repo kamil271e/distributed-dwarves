@@ -38,7 +38,7 @@ void main_loop()
 				// wait
 				break;
 			case DoingJob:
-				println("Robię fuchę !!!!!!!!");
+				println("Robię fuchę %d !!!!!!!!", job_id);
 
 				sleep(5); 
 

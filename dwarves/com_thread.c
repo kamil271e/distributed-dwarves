@@ -15,13 +15,30 @@ void *start_com_thread(void *ptr)
 
         int src_priority = packet.priority;
         int priority = rec_priority < src_priority ? 1 : 0;    // mamy priorytet, jeśli mamy mniejszą wartość
+
+        if (isEmpty(req_queue)){
+            dictator = 0;
+        }
         
         switch ( status.MPI_TAG ) {
             case JOB:
-                if (state == InRun){
+                if (dictator){
+                    // wysyłaj robotę do kolejnych krasnoludów w req_queue
+                    int worker = dequeue(req_queue);
+                    packet_t *pkt = malloc(sizeof(packet_t));
+                    pkt->job_id = packet.job_id;
+                    sendDictatorPacket( pkt, worker, JOB);
+                }
+                else if (state == InRun && packet.src != -1){
                     debug("Skansen wysłał mi zlecenie %d", packet.job_id);
                     changeJobId(packet.job_id);
                     rec_priority = lamport_clock*1000 + rank;
+                    changeState(WantJob);
+                }
+                else if (packet.src == -1){
+                    debug("Dyktator wysłał mi zlecenie %d", packet.job_id);
+                    changeJobId(packet.job_id);
+                    rec_priority = 0;
                     changeState(WantJob);
                 }
                 break;
@@ -41,6 +58,10 @@ void *start_com_thread(void *ptr)
                     changeState(InRun);
                     changeJobId(-1);
                     changeAckCount(0);
+                    req_queue = createQueue();
+                }
+                else if (state == WantJob || state == WaitForACK) {
+                    enqueue(req_queue, packet.src);
                 }
                 break;
             case ACK:
@@ -51,6 +72,9 @@ void *start_com_thread(void *ptr)
 
                     debug("Dostałem ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_count, NUM_DWARVES-1); /* czy potrzeba tutaj muteksa? Będzie wyścig, czy nie będzie? Zastanówcie się. */
                     if ( ack_count >= NUM_DWARVES - 1){ 
+                        if (!isEmpty(req_queue)){
+                            dictator = 1;
+                        }
                         changeState(InSection);
                     } 
                 }
@@ -68,13 +92,15 @@ void *start_com_thread(void *ptr)
                 }
                 break;
             case PORTAL_ACK:
-                pthread_mutex_lock(&ack_portal_count_mut);
-                ack_portal_count++;
-                pthread_mutex_unlock(&ack_portal_count_mut);
-                
-                debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
-                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
-                    changeState(DoingJob);
+                if (ack_portal_count < NUM_DWARVES - 1 - NUM_PORTALS){
+                    pthread_mutex_lock(&ack_portal_count_mut);
+                    ack_portal_count++;
+                    pthread_mutex_unlock(&ack_portal_count_mut);
+                    
+                    debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
+                    if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                        changeState(DoingJob);
+                    }
                 }
                 break;
             default:

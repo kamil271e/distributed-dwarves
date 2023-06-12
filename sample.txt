@@ -1,0 +1,139 @@
+mpicc -Wall queue.c util.c dwarves/com_thread.c dwarves/main.c dwarves/main_thread.c -DDEBUG -g -DNUM_DWARVES=3 -DNUM_TAVERNS=1 -DNUM_PORTALS=1 -o dwarves.out
+mpicc -Wall queue.c util.c taverns/com_thread.c taverns/main.c taverns/main_thread.c -DDEBUG -g -DNUM_DWARVES=3 -DNUM_TAVERNS=1 -DNUM_PORTALS=1 -o taverns.out
+ctags -R .
+mpirun -np 3 ./dwarves.out : -np 1 ./taverns.out
+[1;33m [1]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [2]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [3]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;31m [3]: Skansen wysłał mi zlecenie 0[0;37m
+[1;37m [2]: Skansen wysłał mi zlecenie 0[0;37m
+[1;32m [4]: Skansen wysłał mi zlecenie 0[0;37m
+[1;32m [5]: Priorytety: rec 4002, src 2000[0;37m
+[1;32m [5]: O zlecenie ubiega się 0[0;37m
+[1;32m [5]: Rezygnuję z fuchy, 0 ma wyższy priorytet[0;37m
+[1;32m [6]: Wysyłam potwierdzenie do 0[0;37m
+[1;31m [3]: Czekam na wejście do sekcji krytycznej[0;37m
+[1;31m [5]: Priorytety: rec 3001, src 2000[0;37m
+[1;31m [5]: O zlecenie ubiega się 0[0;37m
+[1;31m [5]: Rezygnuję z fuchy, 0 ma wyższy priorytet[0;37m
+[1;31m [6]: Wysyłam potwierdzenie do 0[0;37m
+[1;31m [6]: Wysyłam prośbę o sekcję krytyczną do 0[0;37m
+[1;37m [2]: Czekam na wejście do sekcji krytycznej[0;37m
+[1;37m [3]: Wysyłam prośbę o sekcję krytyczną do 1[0;37m
+[1;37m [4]: Wysyłam prośbę o sekcję krytyczną do 2[0;37m
+[1;37m [5]: Priorytety: rec 2000, src 3001[0;37m
+[1;37m [5]: O zlecenie ubiega się 1[0;37m
+[1;37m [7]: Dostałem ACK od 1, mam już 1, potrzebuje 2[0;37m
+[1;37m [8]: Dostałem ACK od 2, mam już 2, potrzebuje 2[0;37m
+[1;32m [8]: Priorytety: rec 4002, src 3001[0;37m
+[1;32m [8]: O zlecenie ubiega się 1[0;37m
+[1;32m [9]: Wysyłam potwierdzenie do 1[0;37m
+[1;31m [7]: Wysyłam prośbę o sekcję krytyczną do 2[0;37m
+[1;37m [10]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;37m [10]: Jestem w sekcji krytycznej[0;37m
+[1;37m [11]: Wysyłam prośbę o portal do 1[0;37m
+[1;37m [12]: Wysyłam prośbę o portal do 2[0;37m
+[1;37m [13]: Wysyłam prośbę o portal do 3[0;37m
+[1;37m [15]: Dostałem Portal_ACK od 1, mam już 1, potrzebuje 1[0;37m
+[1;33m [4]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [5]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [6]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;32m [10]: Skansen wysłał mi zlecenie 3[0;37m
+[1;32m [13]: Dostałem portal request[0;37m
+[1;32m [14]: Wysyłam potwierdzenie odn. portalu do 0[0;37m
+[1;32m [14]: Czekam na wejście do sekcji krytycznej[0;37m
+[1;32m [15]: Wysyłam prośbę o sekcję krytyczną do 0[0;37m
+[1;32m [16]: Wysyłam prośbę o sekcję krytyczną do 1[0;37m
+[1;31m [13]: Dostałem portal request[0;37m
+[1;31m [14]: Wysyłam potwierdzenie odn. portalu do 0[0;37m
+[1;31m [17]: Priorytety: rec 3001, src 10002[0;37m
+[1;31m [17]: O zlecenie ubiega się 2[0;37m
+[1;31m [18]: Wysyłam potwierdzenie do 2[0;37m
+[1;32m [19]: Dostałem ACK od 0, mam już 1, potrzebuje 2[0;37m
+[1;32m [20]: Dostałem ACK od 1, mam już 2, potrzebuje 2[0;37m
+[1;37m [17]: Priorytety: rec 2000, src 10002[0;37m
+[1;37m [17]: O zlecenie ubiega się 2[0;37m
+[1;37m [18]: Wysyłam potwierdzenie do 2[0;37m
+[1;32m [20]: Jestem w sekcji krytycznej[0;37m
+[1;32m [21]: Wysyłam prośbę o portal do 0[0;37m
+[1;32m [22]: Wysyłam prośbę o portal do 1[0;37m
+[1;32m [23]: Wysyłam prośbę o portal do 3[0;37m
+[1;32m [24]: Dostałem Portal_ACK od 0, mam już 1, potrzebuje 1[0;37m
+[1;37m [18]: Robię fuchę !!!!!!!![0;37m
+[1;37m [22]: Dostałem portal request[0;37m
+[1;37m [23]: Wysyłam potwierdzenie odn. portalu do 2[0;37m
+[1;31m [23]: Dostałem portal request[0;37m
+[1;31m [24]: Wysyłam potwierdzenie odn. portalu do 2[0;37m
+[1;33m [25]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [26]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [27]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;32m [28]: Robię fuchę !!!!!!!![0;37m
+[1;33m [28]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [29]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [30]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;37m [29]: Wychodzę z sekcji krytycznej[0;37m
+[1;37m [29]: Zmieniam stan na wysyłanie[0;37m
+[1;33m [31]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [32]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [33]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;37m [32]: Skansen wysłał mi zlecenie 30[0;37m
+[1;31m [34]: Priorytety: rec 3001, src 32000[0;37m
+[1;31m [34]: O zlecenie ubiega się 0[0;37m
+[1;31m [35]: Wysyłam potwierdzenie do 0[0;37m
+[1;37m [32]: Czekam na wejście do sekcji krytycznej[0;37m
+[1;37m [33]: Wysyłam prośbę o sekcję krytyczną do 1[0;37m
+[1;37m [34]: Wysyłam prośbę o sekcję krytyczną do 2[0;37m
+[1;37m [37]: Dostałem ACK od 2, mam już 1, potrzebuje 2[0;37m
+[1;37m [38]: Dostałem ACK od 1, mam już 2, potrzebuje 2[0;37m
+[1;32m [34]: Wychodzę z sekcji krytycznej[0;37m
+[1;32m [34]: Zmieniam stan na wysyłanie[0;37m
+[1;32m [35]: Priorytety: rec 10002, src 32000[0;37m
+[1;32m [35]: O zlecenie ubiega się 0[0;37m
+[1;32m [36]: Wysyłam potwierdzenie do 0[0;37m
+[1;37m [38]: Jestem w sekcji krytycznej[0;37m
+[1;37m [39]: Wysyłam prośbę o portal do 1[0;37m
+[1;37m [40]: Wysyłam prośbę o portal do 2[0;37m
+[1;37m [41]: Wysyłam prośbę o portal do 3[0;37m
+[1;37m [42]: Dostałem Portal_ACK od 1, mam już 1, potrzebuje 1[0;37m
+[1;31m [40]: Dostałem portal request[0;37m
+[1;31m [41]: Wysyłam potwierdzenie odn. portalu do 0[0;37m
+[1;32m [41]: Dostałem portal request[0;37m
+[1;32m [42]: Wysyłam potwierdzenie odn. portalu do 0[0;37m
+[1;32m [46]: Skansen wysłał mi zlecenie 42[0;37m
+[1;33m [43]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [44]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [45]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;32m [46]: Czekam na wejście do sekcji krytycznej[0;37m
+[1;32m [47]: Wysyłam prośbę o sekcję krytyczną do 0[0;37m
+[1;32m [48]: Wysyłam prośbę o sekcję krytyczną do 1[0;37m
+[1;32m [50]: Dostałem ACK od 0, mam już 1, potrzebuje 2[0;37m
+[1;31m [49]: Priorytety: rec 3001, src 46002[0;37m
+[1;31m [49]: O zlecenie ubiega się 2[0;37m
+[1;31m [50]: Wysyłam potwierdzenie do 2[0;37m
+[1;37m [48]: Priorytety: rec 32000, src 46002[0;37m
+[1;37m [48]: O zlecenie ubiega się 2[0;37m
+[1;37m [49]: Wysyłam potwierdzenie do 2[0;37m
+[1;37m [49]: Robię fuchę !!!!!!!![0;37m
+[1;32m [51]: Dostałem ACK od 1, mam już 2, potrzebuje 2[0;37m
+[1;32m [51]: Jestem w sekcji krytycznej[0;37m
+[1;32m [52]: Wysyłam prośbę o portal do 0[0;37m
+[1;32m [53]: Wysyłam prośbę o portal do 1[0;37m
+[1;32m [54]: Wysyłam prośbę o portal do 3[0;37m
+[1;37m [53]: Dostałem portal request[0;37m
+[1;37m [54]: Wysyłam potwierdzenie odn. portalu do 2[0;37m
+[1;31m [54]: Dostałem portal request[0;37m
+[1;31m [55]: Wysyłam potwierdzenie odn. portalu do 2[0;37m
+[1;32m [55]: Dostałem Portal_ACK od 0, mam już 1, potrzebuje 1[0;37m
+[1;33m [56]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [57]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [58]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;32m [59]: Robię fuchę !!!!!!!![0;37m
+[1;33m [59]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [60]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [61]: Wysyłam zlecenie na fuchę do 2[0;37m
+[1;37m [60]: Wychodzę z sekcji krytycznej[0;37m
+[1;37m [60]: Zmieniam stan na wysyłanie[0;37m
+[1;37m [63]: Skansen wysłał mi zlecenie 61[0;37m
+[1;33m [62]: Wysyłam zlecenie na fuchę do 0[0;37m
+[1;33m [63]: Wysyłam zlecenie na fuchę do 1[0;37m
+[1;33m [64]: Wysyłam zlecenie na fuchę do 2[0;37m

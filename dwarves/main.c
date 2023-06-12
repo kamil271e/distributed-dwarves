@@ -13,6 +13,7 @@
  *
  */
 struct Queue* ack_queue = NULL;
+struct Queue* req_queue = NULL;
 pthread_t com_thread;
 
 void finalize()
@@ -52,6 +53,7 @@ void check_thread_support(int provided)
 int main(int argc, char **argv)
 {
     ack_queue = createQueue();
+    req_queue = createQueue();
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
     check_thread_support(provided);
