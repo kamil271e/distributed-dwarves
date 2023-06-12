@@ -8,7 +8,6 @@ void *start_com_thread(void *ptr)
     packet_t packet;
 
     while (state != InFinish ) {
-	    // debug("Czekam na recv");
         MPI_Recv( &packet, 1, MPI_PACKET_T, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
         pthread_mutex_lock( &clock_mut );
         lamport_clock = (lamport_clock > packet.ts ? lamport_clock : packet.ts) + 1;
@@ -21,7 +20,7 @@ void *start_com_thread(void *ptr)
             case JOB:
                 if (state == InRun){
                     debug("Skansen wysłał mi zlecenie %d", packet.job_id);
-                    job_id = packet.job_id; 
+                    changeJobId(packet.job_id);
                     rec_priority = lamport_clock*1000 + rank;
                     changeState(WantJob);
                 }
@@ -36,9 +35,8 @@ void *start_com_thread(void *ptr)
                     debug("Rezygnuję z fuchy, %d ma wyższy priorytet", packet.src);
                     sendPacket( 0, status.MPI_SOURCE, ACK );
                     changeState(InRun);
-                    // printf("change job id from %d to -1\n", job_id);
-                    job_id = -1;
-                    ack_count = 0;
+                    changeJobId(-1);
+                    changeAckCount(0);
                 }
                 break;
             case ACK:

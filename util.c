@@ -1,16 +1,12 @@
 #include "util.h"
 
-int rank;
-int size;
-long lamport_clock=0;
+int rank, size;
+int job_id = -1;
+int ack_count, ack_portal_count = 0;
+long lamport_clock = 0;
 long rec_priority = 0;
 MPI_Datatype MPI_PACKET_T;
-
-/* 
- * w util.h extern state_t stan (czyli zapowiedź, że gdzieś tam jest definicja
- * tutaj w util.c state_t stan (czyli faktyczna definicja)
- */
-state_t state=InRun;
+state_t state = InRun;
 
 /* zamek wokół zmiennej współdzielonej między wątkami. 
  * Zwróćcie uwagę, że każdy proces ma osobą pamięć, ale w ramach jednego
@@ -18,6 +14,10 @@ state_t state=InRun;
  * być obwarowany muteksami
  */
 pthread_mutex_t state_mut = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t clock_mut = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t job_id_mut= PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t ack_count_mut = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t ack_portal_count_mut = PTHREAD_MUTEX_INITIALIZER;
 
 struct tagNames_t{
     const char *name;
@@ -75,4 +75,22 @@ void changeState( state_t new_state )
     }
     state = new_state;
     pthread_mutex_unlock( &state_mut );
+}
+
+void changeJobId(int value){
+    pthread_mutex_lock(&job_id_mut);
+    job_id = value;
+    pthread_mutex_unlock(&job_id_mut);
+}
+
+void changeAckCount(int value){
+    pthread_mutex_lock(&ack_count_mut);
+    ack_count = value;
+    pthread_mutex_unlock(&ack_count_mut);
+}
+
+void changeAckPortalCount(int value){
+    pthread_mutex_lock(&ack_portal_count_mut);
+    ack_portal_count = value;
+    pthread_mutex_unlock(&ack_portal_count_mut);
 }

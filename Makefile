@@ -7,7 +7,7 @@ SOURCES_TAVERNS = $(SOURCES) $(wildcard taverns/*.c)
 HEADERS_DWARVES = $(SOURCES_DWARVES:.c=.h)
 HEADERS_TAVERNS = $(SOURCES_TAVERNS:.c=.h)
 
-NUM_DWARVES = 3
+NUM_DWARVES = 4
 NUM_TAVERNS = 1
 NUM_PORTALS = 1
 
@@ -23,8 +23,7 @@ main: $(SOURCES_DWARVES) $(HEADERS_DWARVES) $(SOURCES_TAVERNS) $(HEADERS_TAVERNS
 clear: clean
 
 clean:
-	rm dwarves.out
-	rm taverns.out
+	rm dwarves.out taverns.out
 
 tags: $(SOURCES_DWARVES) $(HEADERS_DWARVES) $(SOURCES_TAVERNS) $(HEADERS_TAVERNS)
 	ctags -R .

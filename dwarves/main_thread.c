@@ -45,13 +45,14 @@ void main_loop()
 				println("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");
 
-				job_id = -1; // wysylanie ACK do krasnali z listy
+				changeJobId(-1);
+				// wysylanie ACK do krasnali z listy
 				while (!isEmpty(ack_queue)){
 					int dest = dequeue(ack_queue);
 					sendPacket(0, dest, PORTAL_ACK);
 				}
-				ack_count=0;
-				ack_portal_count=0;
+				changeAckCount(0);
+				changeAckPortalCount(0);
 				changeState( InRun );
 				break;
 			default: 
