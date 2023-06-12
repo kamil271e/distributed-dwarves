@@ -12,13 +12,8 @@
  * ale zob util.c oraz util.h - zmienną state_t state i funkcję changeState
  *
  */
-int job_id; // size - ilosc procesow - krasnali
-int ack_count = 0;
-int ack_portal_count = 0;
 struct Queue* ack_queue = NULL;
-
 pthread_t com_thread;
-pthread_mutex_t clock_mut = PTHREAD_MUTEX_INITIALIZER;
 
 void finalize()
 {

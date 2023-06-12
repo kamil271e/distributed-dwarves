@@ -15,7 +15,7 @@ void main_loop()
 				// bo aktywne czekanie jest BUE
 				println("Czekam na wejście do sekcji krytycznej")
 				packet_t* pkt = malloc(sizeof(packet_t));
-				pkt->job_id = job_id;
+				pkt->jobId = job_id;
 				for (int i = 0; i <= size-1; i++){ 
 					sendPacket(pkt, i, REQUEST);
 				} changeState(WaitForACK);
@@ -42,13 +42,14 @@ void main_loop()
 				println("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");
 
-				job_id = -1; // wysylanie ACK do krasnali z listy
+				changeJobId(-1);
+				// wysylanie ACK do krasnali z listy
 				while (!isEmpty(ack_queue)){
 					int dest = dequeue(ack_queue);
 					sendPacket(0, dest, PORTAL_ACK);
 				}
-				ack_count=0;
-				ack_portal_count=0;
+				changeAckCount(0);
+				changeAckPortalCount(0);
 				changeState( InRun );
 				break;
 			default: 

@@ -10,7 +10,7 @@ void main_loop()
 			// TODO stany dla skansanu
 			case GenJob:
 				packet_t *pkt = malloc(sizeof(packet_t));
-				pkt->job_id = lamport_clock; // ???
+				pkt->jobId = lamport_clock; // ???
 				for (int i = 0; i < size; i++){
 					if (i != rank){
 						sendPacket(pkt, i, JOB); 

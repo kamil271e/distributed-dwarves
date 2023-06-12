@@ -7,13 +7,13 @@
 #include <stddef.h>
 
 #ifdef DEBUG
-#define debug(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, (long)rank, ##__VA_ARGS__, 27,0,37);
+#define debug(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
 #else
 #define debug(...) ;
 #endif
 
 // makro println - to samo co debug, ale wyświetla się zawsze
-#define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, (long)rank, ##__VA_ARGS__, 27,0,37);
+#define println(FORMAT,...) printf("%c[%d;%dm [%ld]: " FORMAT "%c[%d;%dm\n",  27, (1+(rank/7))%2, 31+(6+rank)%7, lamport_clock, ##__VA_ARGS__, 27,0,37);
 
 #ifndef NUM_TAVERNS
     #define NUM_TAVERNS 1
@@ -49,7 +49,7 @@
 typedef struct {
     int ts;      
     int src;  
-    int job_id; 
+    int jobId; 
 } packet_t;
 
 typedef enum {
@@ -64,17 +64,26 @@ typedef enum {
     GenJob // dla skansenów
 } state_t;
 
+extern int rank;
+extern int size;
+extern int job_id;
+extern int ack_count;
+extern int ack_portal_count;
+extern long lamport_clock;
+
 extern MPI_Datatype MPI_PACKET_T;
 extern state_t state;
 extern pthread_mutex_t state_mut;
 extern pthread_mutex_t clock_mut;
-
-extern int rank;
-extern int size;
-extern long lamport_clock;
+extern pthread_mutex_t job_id_mut;
+extern pthread_mutex_t ack_count_mut;
+extern pthread_mutex_t ack_portal_count_mut;
 
 void init_packet_type();
 void sendPacket(packet_t *pkt, int destination, int tag);
-void changeState( state_t );
+void changeState(state_t);
+void changeJobId(int);
+void changeAckCount(int);
+void changeAckPortalCount(int);
 
 #endif
