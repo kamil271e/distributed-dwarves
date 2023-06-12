@@ -79,6 +79,7 @@ extern pthread_mutex_t clock_mut;
 extern pthread_mutex_t job_id_mut;
 extern pthread_mutex_t ack_count_mut;
 extern pthread_mutex_t ack_portal_count_mut;
+extern pthread_mutex_t queue_mutex;
 
 void init_packet_type();
 void sendPacket(packet_t *pkt, int destination, int tag);

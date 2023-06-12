@@ -47,10 +47,12 @@ void main_loop()
 
 				changeJobId(-1);
 				// wysylanie ACK do krasnali z listy
+				pthread_mutex_lock(&queue_mutex);
 				while (!isEmpty(ack_queue)){
 					int dest = dequeue(ack_queue);
 					sendPacket(0, dest, PORTAL_ACK);
 				}
+				pthread_mutex_unlock(&queue_mutex);
 				changeAckCount(0);
 				changeAckPortalCount(0);
 				changeState( InRun );

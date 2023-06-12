@@ -62,7 +62,9 @@ void *start_com_thread(void *ptr)
                 } else if (packet.ts < lamport_clock){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
                 } else {
+                    pthread_mutex_lock(&queue_mutex);
                     enqueue(ack_queue, packet.src); // status.MPI_SOURCE
+                    pthread_mutex_unlock(&queue_mutex);
                 }
                 break;
             case PORTAL_ACK:

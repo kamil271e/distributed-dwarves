@@ -18,6 +18,7 @@ pthread_mutex_t clock_mut = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t job_id_mut= PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t ack_count_mut = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t ack_portal_count_mut = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 struct tagNames_t{
     const char *name;
