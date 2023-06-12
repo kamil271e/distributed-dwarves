@@ -41,6 +41,11 @@ void *start_com_thread(void *ptr)
                     rec_priority = 0;
                     changeState(WantJob);
                 }
+                if (packet.is_tavern == 1){
+                    packet_t *pkt = malloc(sizeof(packet_t));
+                    pkt->job_id = packet.job_id;
+                    sendPacket(pkt, packet.src, JOB_DELIVER);
+                }
                 break;
             case REQUEST: 
                 debug("Priorytety: rec %ld, src %d", rec_priority, src_priority);

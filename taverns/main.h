@@ -11,12 +11,12 @@
 #include "../util.h"
 #include "../queue.h"
 
-/* tutaj TYLKO zapowiedzi - definicje w main.c */
 extern int rank;
 extern int size;
 extern long lamport_clock;
 
 extern pthread_t com_thread;
-extern struct Queue* ack_queue; 
+extern struct Queue* job_sent_queue; // kolejka z wysłanymi zleceniami
+extern pthread_mutex_t job_sent_queue_mut;
 
 #endif

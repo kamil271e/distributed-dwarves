@@ -12,8 +12,9 @@
  * ale zob util.c oraz util.h - zmienną state_t state i funkcję changeState
  *
  */
-struct Queue* ack_queue = NULL;
+struct Queue* job_sent_queue = NULL;
 pthread_t com_thread;
+pthread_mutex_t job_sent_queue_mut = PTHREAD_MUTEX_INITIALIZER;
 
 void finalize()
 {
@@ -51,7 +52,7 @@ void check_thread_support(int provided)
 
 int main(int argc, char **argv)
 {
-    ack_queue = createQueue();
+    job_sent_queue = createQueue();
     int provided;
     MPI_Init_thread(&argc, &argv, MPI_THREAD_MULTIPLE, &provided);
     check_thread_support(provided);
@@ -63,7 +64,7 @@ int main(int argc, char **argv)
     changeState(GenJob);
 
     // komunikacja (przy tawernie nieużywana)
-    pthread_create( &com_thread, NULL, start_com_thread , 0);
+    pthread_create( &com_thread, NULL, start_com_thread, 0);
     // główna pętla (wysyłanie zleceń)
     main_loop();
 

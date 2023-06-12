@@ -32,9 +32,8 @@
 #define SEC_IN_STATE 1
 #define STATE_CHANGE_PROB 10
 
-/* packet_t ma trzy pola, więc NITEMS=4. Wykorzystane w inicjuj_typ_pakietu */
-#define NITEMS 4
-#define PORTAL_NUM 5
+/* packet_t ma 5 pól, więc NITEMS=5. Wykorzystane w inicjuj_typ_pakietu */
+#define NITEMS 5
 
 /* TYPY PAKIETÓW */
 #define ACK     1
@@ -45,12 +44,14 @@
 #define JOB 6
 #define PORTAL_ACK 7
 #define PORTAL_REQUEST 8
+#define JOB_DELIVER 9
 
 typedef struct {
     int ts;      
     int src;  
     int job_id;
     int priority;
+    int is_tavern;
 } packet_t;
 
 typedef enum {
@@ -62,7 +63,8 @@ typedef enum {
     WaitForPortal,
     DoingJob,
     InFinish,
-    GenJob // dla skansenów
+    GenJob, // dla skansenów
+    ResendJob
 } state_t;
 
 extern int rank;
