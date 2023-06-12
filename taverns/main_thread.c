@@ -8,7 +8,7 @@ void main_loop()
     while (state != InFinish) {
 		switch (state) {
 			case GenJob:
-				debug("Generuję fuchę %d", lamport_clock);
+				println("Generuję fuchę %ld", lamport_clock);
 				packet_t *pkt = malloc(sizeof(packet_t));
 				pkt->job_id = lamport_clock;
 				for (int i = 0; i < size; i++){

@@ -16,6 +16,10 @@ struct Queue* ack_queue = NULL;
 struct Queue* req_queue = NULL;
 pthread_t com_thread;
 
+sem_t waitForJobSem;
+sem_t waitForAckSem;
+sem_t waitForPortalSem;
+
 void finalize()
 {
     pthread_mutex_destroy( &state_mut);

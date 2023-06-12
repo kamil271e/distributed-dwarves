@@ -8,6 +8,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <math.h>
+#include <semaphore.h>
 #include "../util.h"
 #include "../queue.h"
 
@@ -20,5 +21,9 @@ extern long rec_priority; // priorytet ustalany przy dostaniu zlecenia
 extern pthread_t com_thread;
 extern struct Queue* ack_queue; 
 extern struct Queue* req_queue; 
+
+extern sem_t waitForJobSem;
+extern sem_t waitForAckSem;
+extern sem_t waitForPortalSem;
 
 #endif

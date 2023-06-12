@@ -8,7 +8,7 @@ void main_loop()
     while (state != InFinish) {
 		switch (state) {
 			case InRun: 
-				// wait
+				sem_wait(&waitForJobSem);
 				break;
 			case WantJob:
 				println("Czekam na wejście do sekcji krytycznej")
@@ -20,11 +20,10 @@ void main_loop()
 					if (i != rank){
 						sendPacket(pkt, i, REQUEST);
 					}
-				} changeState(WaitForACK);
+				} 
 				free(pkt);
-				break;
-			case WaitForACK:
-				// wait
+				sem_wait(&waitForAckSem);
+				changeState(InSection);
 				break;
 			case InSection:
 				println("Jestem w sekcji krytycznej")
@@ -32,10 +31,9 @@ void main_loop()
 					if (i != rank){
 						sendPacket(0, i, PORTAL_REQUEST);
 					}
-				} changeState(WaitForPortal);
-				break;
-			case WaitForPortal:
-				// wait
+				} 
+				sem_wait(&waitForPortalSem);
+				changeState(DoingJob);
 				break;
 			case DoingJob:
 				println("Robię fuchę %d !!!!!!!!", job_id);

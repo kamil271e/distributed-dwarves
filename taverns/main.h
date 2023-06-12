@@ -8,6 +8,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <math.h>
+#include <semaphore.h>
 #include "../util.h"
 #include "../queue.h"
 

@@ -22,6 +22,7 @@ void *start_com_thread(void *ptr)
         
         switch ( status.MPI_TAG ) {
             case JOB:
+                sem_post(&waitForJobSem);
                 if (dictator){
                     // wysyłaj robotę do kolejnych krasnoludów w req_queue
                     int worker = dequeue(req_queue);
@@ -75,6 +76,7 @@ void *start_com_thread(void *ptr)
                         if (!isEmpty(req_queue)){
                             dictator = 1;
                         }
+                        sem_post(&waitForAckSem);
                         changeState(InSection);
                     } 
                 }
@@ -99,6 +101,7 @@ void *start_com_thread(void *ptr)
                     
                     debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
                     if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                        sem_post(&waitForPortalSem);
                         changeState(DoingJob);
                     }
                 }
