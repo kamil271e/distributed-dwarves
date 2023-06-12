@@ -13,6 +13,7 @@ struct Queue* createQueue() {
     struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
     queue->front = NULL;
     queue->rear = NULL;
+    queue->size = 0;
     return queue;
 }
 
@@ -22,7 +23,6 @@ int isEmpty(struct Queue* queue) {
 
 void enqueue(struct Queue* queue, int value) {
     struct QueueNode* newNode = createQueueNode(value);
-
     if (isEmpty(queue)) {
         queue->front = newNode;
         queue->rear = newNode;
@@ -30,6 +30,7 @@ void enqueue(struct Queue* queue, int value) {
         queue->rear->next = newNode;
         queue->rear = newNode;
     }
+    queue->size++;
 }
 
 int dequeue(struct Queue* queue) {
@@ -37,7 +38,6 @@ int dequeue(struct Queue* queue) {
         printf("The queue is empty.\n");
         return -1;
     }
-
     struct QueueNode* temp = queue->front;
     int dequeuedValue = temp->data;
 
@@ -49,6 +49,7 @@ int dequeue(struct Queue* queue) {
     }
 
     free(temp);
+    queue->size--;
     return dequeuedValue;
 }
 
@@ -64,4 +65,29 @@ void printQueue(struct Queue* queue) {
         current = current->next;
     }
     printf("\n");
+}
+
+void deleteNode(struct Queue* queue, int value) {
+    struct QueueNode* current = queue->front;
+    struct QueueNode* previous = NULL;
+
+    while (current != NULL && current->data != value) {
+        previous = current;
+        current = current->next;
+    }
+
+    if (current != NULL) {
+        if (previous == NULL) {
+            queue->front = current->next;
+        }
+        else if (current == queue->rear) {
+            queue->rear = previous;
+            previous->next = NULL;
+        }
+        else {
+            previous->next = current->next;
+        }
+        free(current);
+        queue->size--;
+    }
 }

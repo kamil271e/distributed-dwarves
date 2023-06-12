@@ -34,6 +34,10 @@ void *start_com_thread(void *ptr)
                     changeJobId(packet.job_id);
                     rec_priority = lamport_clock*1000 + rank;
                     changeState(WantJob);
+
+                    packet_t *pkt = malloc(sizeof(packet_t));
+                    pkt->job_id = packet.job_id;
+                    sendPacket(pkt, packet.src, JOB_DELIVER);
                 }
                 else if (packet.src == -1){
                     debug("Dyktator wysłał mi zlecenie %d", packet.job_id);
@@ -55,10 +59,10 @@ void *start_com_thread(void *ptr)
                     packet_t *pkt = malloc(sizeof(packet_t));
                     pkt->job_id = job_id;
                     sendPacket( pkt, status.MPI_SOURCE, ACK );
-                    changeState(InRun);
                     changeJobId(-1);
                     changeAckCount(0);
                     req_queue = createQueue();
+                    changeState(InRun);
                 }
                 else if (state == WantJob || state == WaitForACK) {
                     enqueue(req_queue, packet.src);
@@ -81,9 +85,9 @@ void *start_com_thread(void *ptr)
                 break;
             case PORTAL_REQUEST:
                 debug("Dostałem portal request");
-                if (state != InSection){
+                if (state != DoingJob && state != WaitForPortal){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
-                } else if (packet.ts < lamport_clock){
+                } else if (!priority){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
                 } else {
                     pthread_mutex_lock(&queue_mutex);

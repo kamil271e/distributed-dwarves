@@ -11,8 +11,8 @@ NUM_DWARVES = 3
 NUM_TAVERNS = 1
 NUM_PORTALS = 1
 
-FLAGS=-DDEBUG -g
-# FLAGS=-g
+# FLAGS=-DDEBUG -g
+FLAGS=-g
 
 all: main tags
 
