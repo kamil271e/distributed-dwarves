@@ -26,7 +26,8 @@ struct tagNames_t{
     int tag;
 } tagNames[] = { { "pakiet aplikacyjny", APP_PKT }, { "finish", FINISH}, 
                 { "potwierdzenie", ACK}, {"prośbę o sekcję krytyczną", REQUEST}, {"zwolnienie sekcji krytycznej", RELEASE},
-                {"zlecenie na fuchę", JOB }, {"prośbę o portal", PORTAL_REQUEST}, {"potwierdzenie odn. portalu", PORTAL_ACK}};
+                {"zlecenie na fuchę", JOB }, {"prośbę o portal", PORTAL_REQUEST}, {"potwierdzenie odn. portalu", PORTAL_ACK},
+                {"potwierdzenie dostarczenia zlecenia", JOB_DELIVER}};
 
 const char *const tag2string( int tag )
 {
@@ -38,15 +39,14 @@ const char *const tag2string( int tag )
 
 void init_packet_type()
 {
-    int blocklengths[NITEMS] = {1,1,1,1,1};
-    MPI_Datatype types[NITEMS] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT};
+    int blocklengths[NITEMS] = {1,1,1,1};
+    MPI_Datatype types[NITEMS] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT};
 
     MPI_Aint offsets[NITEMS]; 
     offsets[0] = offsetof(packet_t, ts);
     offsets[1] = offsetof(packet_t, src);
     offsets[2] = offsetof(packet_t, job_id);
     offsets[3] = offsetof(packet_t, priority);
-    offsets[4] = offsetof(packet_t, is_tavern);
     
 
     MPI_Type_create_struct(NITEMS, blocklengths, offsets, types, &MPI_PACKET_T);

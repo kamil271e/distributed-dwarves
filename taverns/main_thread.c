@@ -8,11 +8,10 @@ void main_loop()
     while (state != InFinish) {
 		switch (state) {
 			case GenJob:
-				if (job_sent_queue->size > 1) changeState(ResendJob);
+				if (job_sent_queue->size > 1) {changeState(ResendJob); break;}
 				println("Generuję zlecenie %ld", lamport_clock);
 				packet_t *pkt = malloc(sizeof(packet_t));
 				pkt->job_id = lamport_clock;
-				pkt->is_tavern = 1;
 				for (int i = 0; i < size; i++){
 					if (i != rank){
 						sendPacket(pkt, i, JOB); 
@@ -24,19 +23,23 @@ void main_loop()
 				pthread_mutex_unlock(&job_sent_queue_mut);
 				break;
 			case ResendJob:
+				struct Queue* temp = createQueue();
                 pthread_mutex_lock(&job_sent_queue_mut);
+				int i = 0;
 				while(!isEmpty(job_sent_queue)){
 					int job_to_resend = dequeue(job_sent_queue);
 					println("Przesyłam ponownie zlecenie %d", job_to_resend);
 					packet_t *pkt = malloc(sizeof(packet_t));
 					pkt->job_id = job_to_resend;
-					pkt->is_tavern = 1;
 					for (int i = 0; i < size; i++){
 						if (i != rank){
 							sendPacket(pkt, i, JOB); 
 						}
 					}
+					enqueue(temp, job_to_resend);
+					i++;
 				}
+				job_sent_queue = temp;
                 pthread_mutex_unlock(&job_sent_queue_mut);
 				changeState(GenJob);
 				break;
