@@ -28,10 +28,11 @@ void main_loop()
 				break;
 			case WaitForACK:
 				// wait
+				if (NUM_DWARVES==1) changeState(InSection);
 				break;
 			case InSection:
 				println("Jestem w sekcji krytycznej")
-				
+
 				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){
 					if (i != rank){
@@ -42,6 +43,7 @@ void main_loop()
 				break;
 			case WaitForPortal:
 				// wait
+				if (NUM_DWARVES==1) changeState(DoingJob);
 				break;
 			case DoingJob:
 				println("Robię fuchę %d !!!!!!!!", job_id);

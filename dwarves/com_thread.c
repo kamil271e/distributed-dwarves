@@ -14,7 +14,7 @@ void *start_com_thread(void *ptr)
         pthread_mutex_unlock( &clock_mut );
 
         int src_priority = packet.priority;
-        int priority = rec_priority < src_priority ? 1 : 0;    // mamy priorytet, jeśli mamy mniejszą wartość
+        int priority = rec_priority < src_priority ? 1 : 0; // mamy priorytet, jeśli mamy mniejszą wartość
 
         if (isEmpty(req_queue)){
             dictator = 0;
