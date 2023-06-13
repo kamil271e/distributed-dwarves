@@ -96,11 +96,13 @@ void *start_com_thread(void *ptr)
                 }
                 break;
             case PORTAL_ACK:
-                if (ack_portal_count < NUM_DWARVES - 1 - NUM_PORTALS){
+                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                    changeState(DoingJob);
+                }
+                else {
                     pthread_mutex_lock(&ack_portal_count_mut);
                     ack_portal_count++;
                     pthread_mutex_unlock(&ack_portal_count_mut);
-                    
                     debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
                     if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
                         changeState(DoingJob);
