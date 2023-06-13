@@ -19,9 +19,14 @@ void *start_com_thread(void *ptr)
                 deleteNode(job_sent_queue, packet.job_id);
                 pthread_mutex_unlock(&job_sent_queue_mut);
                 break; 
+            case JOB:
+                pthread_mutex_lock( &clock_mut );
+                lamport_clock++;
+                pthread_mutex_unlock( &clock_mut );
             default:
                 break;
         }
     }
     return NULL;
 }
+ 

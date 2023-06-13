@@ -9,9 +9,15 @@ void main_loop()
 		switch (state) {
 			case GenJob:
 				if (job_sent_queue->size > 1) {changeState(ResendJob); break;}
-				println("Generuję zlecenie %ld", lamport_clock);
+
 				packet_t *pkt = malloc(sizeof(packet_t));
-				pkt->job_id = lamport_clock;
+				if (lamport_clock == 0){
+					pkt->job_id = rank;
+				}else{
+					pkt->job_id = lamport_clock;
+				}
+				println("Generuję zlecenie %d", pkt->job_id);
+
 				for (int i = 0; i < size; i++){
 					if (i != rank){
 						sendPacket(pkt, i, JOB); 

@@ -13,7 +13,7 @@
 
 extern int rank;
 extern int size;
-extern long lamport_clock;
+extern int lamport_clock;
 
 extern pthread_t com_thread;
 extern struct Queue* job_sent_queue; // kolejka z wysłanymi zleceniami

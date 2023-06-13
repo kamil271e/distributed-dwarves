@@ -14,9 +14,9 @@
 /* tutaj TYLKO zapowiedzi - definicje w main.c */
 extern int rank;
 extern int size;
-extern long lamport_clock;
+extern int lamport_clock;
+extern int rec_priority; // priorytet ustalany przy dostaniu zlecenia
 
-extern long rec_priority; // priorytet ustalany przy dostaniu zlecenia
 extern pthread_t com_thread;
 extern struct Queue* ack_queue; 
 extern struct Queue* req_queue; 

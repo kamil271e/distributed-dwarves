@@ -4,8 +4,8 @@ int rank, size;
 int job_id = -1;
 int ack_count, ack_portal_count = 0;
 int dictator = 0;
-long lamport_clock = 0;
-long rec_priority = 0;
+int lamport_clock = 0;
+int rec_priority = 0;
 MPI_Datatype MPI_PACKET_T;
 state_t state = InRun;
 
