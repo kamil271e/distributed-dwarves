@@ -25,7 +25,7 @@ void main_loop()
 				}
 				pthread_mutex_lock(&job_sent_queue_mut);
 				enqueue(job_sent_queue, pkt->job_id);
-				printQueue(job_sent_queue);
+				// printQueue(job_sent_queue);
 				pthread_mutex_unlock(&job_sent_queue_mut);
 				break;
 			case ResendJob:

@@ -32,6 +32,8 @@ void main_loop()
 				break;
 			case InSection:
 				debug("Jestem w sekcji krytycznej")
+				rec_priority = lamport_clock*1000 + rank;
+				pkt->priority = rec_priority;
 
 				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){
@@ -48,7 +50,9 @@ void main_loop()
 			case DoingJob:
 				println("Robię fuchę %d !!!!!!!!", job_id);
 
-				sleep(1); 
+				sleep(10); 
+
+				println("Skończyłem robić fuchę %d !!!!!!!!", job_id);
 
 				debug("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");

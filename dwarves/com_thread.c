@@ -88,16 +88,17 @@ void *start_com_thread(void *ptr)
                 debug("Dostałem portal request");
                 if (state != DoingJob && state != WaitForPortal){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
-                } else if (!priority){
+                }
+                else if (state != InRun && !priority){
                     sendPacket(0, status.MPI_SOURCE, PORTAL_ACK);
-                } else {
+                } else if ((state != InRun && priority) || state == DoingJob ){
                     pthread_mutex_lock(&queue_mutex);
                     enqueue(ack_queue, packet.src); // status.MPI_SOURCE
                     pthread_mutex_unlock(&queue_mutex);
                 }
                 break;
             case PORTAL_ACK:
-                if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                if (ack_portal_count >= NUM_DWARVES - NUM_PORTALS){
                     changeState(DoingJob);
                 }
                 else {
@@ -105,7 +106,7 @@ void *start_com_thread(void *ptr)
                     ack_portal_count++;
                     pthread_mutex_unlock(&ack_portal_count_mut);
                     debug("Dostałem Portal_ACK od %d, mam już %d, potrzebuje %d", status.MPI_SOURCE, ack_portal_count, NUM_DWARVES - 1 - NUM_PORTALS);
-                    if (ack_portal_count >= NUM_DWARVES - 1 - NUM_PORTALS){
+                    if (ack_portal_count >= NUM_DWARVES - NUM_PORTALS){
                         changeState(DoingJob);
                     }
                 }
