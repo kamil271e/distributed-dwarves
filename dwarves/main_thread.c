@@ -14,7 +14,7 @@ void main_loop()
 				// wait
 				break;
 			case WantJob:
-				println("Czekam na wejście do sekcji krytycznej")
+				debug("Czekam na wejście do sekcji krytycznej")
 				
 				pkt->job_id = job_id;
 				pkt->priority = rec_priority;
@@ -31,7 +31,7 @@ void main_loop()
 				if (NUM_DWARVES==1) changeState(InSection);
 				break;
 			case InSection:
-				println("Jestem w sekcji krytycznej")
+				debug("Jestem w sekcji krytycznej")
 
 				pkt->job_id = job_id;
 				for (int i = 0; i <= size-1; i++){
@@ -50,7 +50,7 @@ void main_loop()
 
 				sleep(1); 
 
-				println("Wychodzę z sekcji krytycznej")
+				debug("Wychodzę z sekcji krytycznej")
 				debug("Zmieniam stan na wysyłanie");
 
 				changeJobId(-1);

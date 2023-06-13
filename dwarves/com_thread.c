@@ -28,6 +28,7 @@ void *start_com_thread(void *ptr)
                     packet_t *pkt = malloc(sizeof(packet_t));
                     pkt->job_id = packet.job_id;
                     sendDictatorPacket( pkt, worker, JOB);
+                    sendPacket(pkt, packet.src, JOB_DELIVER);
                 }
                 else if (state == InRun && packet.src != -1){
                     debug("Skansen wysłał mi zlecenie %d", packet.job_id);
